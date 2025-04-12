@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "870300714437",
+    "project_id": "my-bootcamp-notes",
+    "storage_bucket": "my-bootcamp-notes.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:870300714437:android:01d48daabd33384fc077ac",
+        "android_client_info": {
+          "package_name": "com.example.my_bootcamp_notes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAivq1sOqGueWkZyFUmlLngNPAt8e3GEDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
