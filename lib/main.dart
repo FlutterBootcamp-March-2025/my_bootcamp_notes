@@ -4,8 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:my_bootcamp_notes/controller/notes_controller.dart';
 import 'package:my_bootcamp_notes/firebase_options.dart';
+import 'package:my_bootcamp_notes/model/note.dart';
 import 'package:my_bootcamp_notes/view/about_page.dart';
 import 'package:my_bootcamp_notes/view/home_page.dart';
+import 'package:my_bootcamp_notes/view/notes/note_edit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,6 +65,28 @@ class _MyAppState extends State<MyApp> {
                 foregroundColor: Colors.white,
               ),
               body: pages[currentIndex],
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  Get.to(() => NoteEdit(controller: controller, note: Note()));
+                },
+                child: Icon(Icons.add),
+                backgroundColor: Colors.blueAccent,
+                foregroundColor: Colors.white,
+              ),
+              bottomNavigationBar: NavigationBar(
+                selectedIndex: currentIndex,
+                onDestinationSelected:
+                    (value) => setState(() {
+                      currentIndex = value;
+                    }),
+                destinations: [
+                  NavigationDestination(icon: Icon(Icons.house), label: 'Home'),
+                  NavigationDestination(
+                    icon: Icon(Icons.person),
+                    label: 'About',
+                  ),
+                ],
+              ),
             );
           } else {
             return CircularProgressIndicator();
