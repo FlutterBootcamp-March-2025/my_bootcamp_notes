@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_bootcamp_notes/controller/auth_controller.dart';
 
 import '../controller/notes_controller.dart';
 import '../model/note.dart';
@@ -43,6 +44,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authController = Get.find<AuthController>();
     final pages = [HomePage(), AboutPage()];
 
     // Load notes when the widget is built
@@ -53,6 +55,17 @@ class _MainPageState extends State<MainPage> {
         title: Text('My Notes'),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
+        actions: [
+          Container(
+            margin: EdgeInsets.all(8.0),
+            child: IconButton.filled(
+              onPressed: () {
+                authController.logout();
+              },
+              icon: Icon(Icons.exit_to_app),
+            ),
+          ),
+        ],
       ),
       body: pages[currentIndex],
       floatingActionButton: FloatingActionButton(
@@ -71,10 +84,7 @@ class _MainPageState extends State<MainPage> {
             }),
         destinations: [
           NavigationDestination(icon: Icon(Icons.house), label: 'Home'),
-          NavigationDestination(
-            icon: Icon(Icons.person),
-            label: 'About',
-          ),
+          NavigationDestination(icon: Icon(Icons.person), label: 'About'),
         ],
       ),
     );
