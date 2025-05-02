@@ -8,20 +8,8 @@ class NotesController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final RxList<Note> notes = <Note>[].obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    if (notes.isNotEmpty) {
-      notes.removeLast();
-    }
-  }
-
-  sort() {
-    // Sort notes by creation time (newest first)
-    notes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-  }
-
   loadNotes(docs) {
+    notes.clear();
     for (var doc in docs) {
       DateTime createdAt =
           doc['createdAt'] != null
@@ -36,7 +24,6 @@ class NotesController extends GetxController {
         ),
       );
     }
-    sort();
   }
 
   Future<void> addNote(Note note) async {
@@ -49,19 +36,25 @@ class NotesController extends GetxController {
           'createdAt': note.createdAt.millisecondsSinceEpoch,
         };
 
-        await _firestore
+        final doc = await _firestore
             .collection('Notes')
             .doc(user.uid)
             .collection('user_notes')
-            .add(newNote)
-            .then((DocumentReference doc) {
-              note.id = doc.id;
-              notes.add(note);
-              Get.snackbar('Success', 'Note added successfully!');
-              sort();
-            });
+            .add(newNote);
+
+        note.id = doc.id;
+        // notes.add(note);
+        Get.snackbar(
+          'Success',
+          'Note added successfully!',
+          snackPosition: SnackPosition.BOTTOM,
+        );
       } catch (e) {
-        Get.snackbar('Error', 'Failed to add note: $e');
+        Get.snackbar(
+          'Error',
+          'Failed to add note: $e',
+          snackPosition: SnackPosition.BOTTOM,
+        );
       }
     }
   }
@@ -87,12 +80,20 @@ class NotesController extends GetxController {
           notes[index].note = note.note;
           // Trigger a refresh of the list
           notes.refresh();
-          Get.snackbar('Success', 'Note updated successfully!');
+          Get.snackbar(
+            'Success',
+            'Note updated successfully!',
+            snackPosition: SnackPosition.BOTTOM,
+          );
         } else {
           await addNote(note);
         }
       } catch (e) {
-        Get.snackbar('Error', 'Failed to update note: $e');
+        Get.snackbar(
+          'Error',
+          'Failed to update note: $e',
+          snackPosition: SnackPosition.BOTTOM,
+        );
       }
     }
   }
@@ -108,9 +109,17 @@ class NotesController extends GetxController {
             .doc(note.id)
             .delete();
         notes.remove(note);
-        Get.snackbar('Success', 'Note deleted successfully!');
+        Get.snackbar(
+          'Success',
+          'Note deleted successfully!',
+          snackPosition: SnackPosition.BOTTOM,
+        );
       } catch (e) {
-        Get.snackbar('Error', 'Failed to delete note: $e');
+        Get.snackbar(
+          'Error',
+          'Failed to delete note: $e',
+          snackPosition: SnackPosition.BOTTOM,
+        );
       }
     }
   }

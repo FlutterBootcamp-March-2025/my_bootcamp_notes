@@ -12,11 +12,11 @@ import 'package:my_bootcamp_notes/view/main_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  _initializeControllers();
+  init();
   runApp(const MyApp());
 }
 
-void _initializeControllers() {
+void init() {
   Get.put(NotesController());
   Get.put(AuthController());
 }
@@ -31,7 +31,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    final pages = [HomePage(), AboutPage()];
     return GetMaterialApp(
       title: 'Notes App',
       initialRoute: '/',

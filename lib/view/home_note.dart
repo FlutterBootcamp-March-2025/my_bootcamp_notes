@@ -6,12 +6,13 @@ import '../model/note.dart';
 import 'notes/note_edit.dart';
 
 class HomeNote extends StatelessWidget {
-  final NotesController controller;
   final Note note;
-  const HomeNote({super.key, required this.controller, required this.note});
+  const HomeNote({super.key, required this.note});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<NotesController>();
+
     return Padding(
       padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
       child: SizedBox(
@@ -68,14 +69,14 @@ class HomeNote extends StatelessWidget {
                                         ElevatedButton.icon(
                                           onPressed: () async {
                                             await controller.deleteNote(note);
-                                            Get.back();
+                                            Get.offAllNamed('/');
                                           },
                                           icon: const Icon(Icons.check),
                                           label: const Text('Yes'),
                                         ),
                                         ElevatedButton.icon(
                                           onPressed: () {
-                                            Get.back();
+                                            Get.offAllNamed('/');
                                           },
                                           icon: const Icon(Icons.delete),
                                           label: const Text('No'),

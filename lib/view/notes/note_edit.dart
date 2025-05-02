@@ -59,7 +59,7 @@ class NoteEdit extends StatelessWidget {
                         note.title = titleController.text;
                         note.note = noteController.text;
                         await controller.updateNote(note);
-                        Get.back();
+                        Get.offAllNamed('/');
                       },
                       icon: Icon(Icons.save),
                       label: Text('Save'),

@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
       () => ListView.builder(
         itemCount: notes.length,
         itemBuilder: (context, index) {
-          return HomeNote(controller: controller, note: notes[index]);
+          return HomeNote(note: notes[index]);
         },
       ),
     );
