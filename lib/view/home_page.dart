@@ -5,12 +5,11 @@ import 'package:my_bootcamp_notes/controller/notes_controller.dart';
 import 'home_note.dart';
 
 class HomePage extends StatelessWidget {
-  final NotesController controller;
-
-  const HomePage({super.key, required this.controller});
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<NotesController>();
     final notes = controller.notes;
 
     return Obx(

@@ -37,12 +37,7 @@ class HomeNote extends StatelessWidget {
                             child: TextButton(
                               onPressed: () {
                                 Get.back();
-                                Get.to(
-                                  () => NoteEdit(
-                                    controller: controller,
-                                    note: note,
-                                  ),
-                                );
+                                Get.to(() => NoteEdit(note: note));
                               },
                               child: const Text('Edit'),
                             ),
@@ -71,8 +66,8 @@ class HomeNote extends StatelessWidget {
                                       ),
                                       actions: [
                                         ElevatedButton.icon(
-                                          onPressed: () {
-                                            controller.deleteNote(note);
+                                          onPressed: () async {
+                                            await controller.deleteNote(note);
                                             Get.back();
                                           },
                                           icon: const Icon(Icons.check),

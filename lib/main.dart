@@ -1,17 +1,29 @@
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_bootcamp_notes/controller/auth_controller.dart';
 import 'package:my_bootcamp_notes/controller/notes_controller.dart';
 import 'package:my_bootcamp_notes/firebase_options.dart';
-import 'package:my_bootcamp_notes/model/note.dart';
 import 'package:my_bootcamp_notes/view/about_page.dart';
+import 'package:my_bootcamp_notes/view/auth/login_page.dart';
 import 'package:my_bootcamp_notes/view/home_page.dart';
-import 'package:my_bootcamp_notes/view/notes/note_edit.dart';
+import 'package:my_bootcamp_notes/view/main_page.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+  }
+  _initializeControllers();
   runApp(const MyApp());
+}
+
+void _initializeControllers() {
+  Get.put(NotesController());
+  Get.put(AuthController());
 }
 
 class MyApp extends StatefulWidget {
@@ -22,78 +34,35 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final Future<FirebaseApp> _fbApp = Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  final NotesController controller = Get.put(NotesController());
-  int currentIndex = 0;
-  bool hasNotesLoaded = false;
-
-  loadNotes() async {
-    if (hasNotesLoaded) return;
-
-    final db = FirebaseFirestore.instance;
-    final notes = db.collection('Notes');
-    final snapshot = await notes.get();
-    controller.loadNotes(snapshot.docs);
-    hasNotesLoaded = true;
+  @override
+  Widget build(BuildContext context) {
+    final pages = [HomePage(), AboutPage()];
+    return GetMaterialApp(
+      title: 'Notes App',
+      initialRoute: '/',
+      getPages: [
+        GetPage(name: '/', page: () => AuthWrapper()),
+        GetPage(name: '/main', page: () => MainPage()),
+        GetPage(name: '/login', page: () => LoginPage()),
+        GetPage(name: '/home', page: () => HomePage()),
+      ],
+      home: AuthWrapper(),
+      debugShowCheckedModeBanner: false,
+    );
   }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final pages = [HomePage(controller: controller), AboutPage()];
-    return GetMaterialApp(
-      home: FutureBuilder(
-        future: _fbApp,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(
-                child: Text(
-                  'Something went wrong!',
-                  style: TextStyle(fontSize: 32.0),
-                ),
-              ),
-            );
-          } else if (snapshot.hasData) {
-            loadNotes();
-
-            return Scaffold(
-              appBar: AppBar(
-                title: Text('My Notes'),
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-              ),
-              body: pages[currentIndex],
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  Get.to(() => NoteEdit(controller: controller, note: Note()));
-                },
-                child: Icon(Icons.add),
-                backgroundColor: Colors.blueAccent,
-                foregroundColor: Colors.white,
-              ),
-              bottomNavigationBar: NavigationBar(
-                selectedIndex: currentIndex,
-                onDestinationSelected:
-                    (value) => setState(() {
-                      currentIndex = value;
-                    }),
-                destinations: [
-                  NavigationDestination(icon: Icon(Icons.house), label: 'Home'),
-                  NavigationDestination(
-                    icon: Icon(Icons.person),
-                    label: 'About',
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return CircularProgressIndicator();
-          }
-        },
-      ),
-      debugShowCheckedModeBanner: false,
-    );
+    final authController = Get.find<AuthController>();
+    return Obx(() {
+      if (authController.isLoading.value) {
+        return Scaffold(body: Center(child: CircularProgressIndicator()));
+      }
+      return authController.user.value != null ? MainPage() : LoginPage();
+    });
   }
 }

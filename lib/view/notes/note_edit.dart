@@ -4,18 +4,27 @@ import 'package:my_bootcamp_notes/controller/notes_controller.dart';
 import 'package:my_bootcamp_notes/model/note.dart';
 
 class NoteEdit extends StatelessWidget {
-  final NotesController controller;
   final Note note;
 
-  const NoteEdit({super.key, required this.controller, required this.note});
+  const NoteEdit({super.key, required this.note});
 
   @override
   Widget build(BuildContext context) {
-    final titleController = TextEditingController();
-    final noteController = TextEditingController();
+    final titleController = TextEditingController(text: note.title);
+    final noteController = TextEditingController(text: note.note);
+    final controller = Get.find<NotesController>();
 
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text('Edit Note'),
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Get.back(),
+          ),
+        ),
         body: Container(
           margin: EdgeInsets.all(16.0),
           child: Form(
@@ -46,10 +55,10 @@ class NoteEdit extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton.icon(
-                      onPressed: () {
+                      onPressed: () async {
                         note.title = titleController.text;
                         note.note = noteController.text;
-                        controller.updateNote(note);
+                        await controller.updateNote(note);
                         Get.back();
                       },
                       icon: Icon(Icons.save),

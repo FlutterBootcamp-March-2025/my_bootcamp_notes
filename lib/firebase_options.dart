@@ -83,4 +83,5 @@ class DefaultFirebaseOptions {
     authDomain: 'my-bootcamp-notes.firebaseapp.com',
     storageBucket: 'my-bootcamp-notes.firebasestorage.app',
   );
+
 }
