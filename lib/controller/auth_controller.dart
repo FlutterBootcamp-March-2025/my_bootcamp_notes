@@ -1,9 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-import '../view/auth/login_page.dart';
-import '../view/home_page.dart';
-
 class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Rx<User?> user = Rx<User?>(null);
@@ -13,7 +10,6 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('AuthController: Binding auth state changes');
     user.bindStream(
       _auth.authStateChanges().handleError((e) {
         print('AuthController: Auth state error: $e');

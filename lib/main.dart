@@ -11,12 +11,7 @@ import 'package:my_bootcamp_notes/view/main_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  } catch (e) {
-  }
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   _initializeControllers();
   runApp(const MyApp());
 }

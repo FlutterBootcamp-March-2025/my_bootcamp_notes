@@ -23,18 +23,20 @@ class NotesController extends GetxController {
 
   loadNotes(docs) {
     for (var doc in docs) {
-      DateTime createdAt = doc['createdAt'] != null 
-          ? DateTime.fromMillisecondsSinceEpoch(doc['createdAt']) 
-          : DateTime.now();
-      notes.add(Note(
-        id: doc.id, 
-        title: doc['title'], 
-        note: doc['note'],
-        createdAt: createdAt,
-      ));
+      DateTime createdAt =
+          doc['createdAt'] != null
+              ? DateTime.fromMillisecondsSinceEpoch(doc['createdAt'])
+              : DateTime.now();
+      notes.add(
+        Note(
+          id: doc.id,
+          title: doc['title'],
+          note: doc['note'],
+          createdAt: createdAt,
+        ),
+      );
     }
-    // Sort notes by creation time (newest first)
-    notes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    sort();
   }
 
   Future<void> addNote(Note note) async {
@@ -55,7 +57,7 @@ class NotesController extends GetxController {
             .then((DocumentReference doc) {
               note.id = doc.id;
               notes.add(note);
-              // Sort notes by creation time (newest first)
+              Get.snackbar('Success', 'Note added successfully!');
               sort();
             });
       } catch (e) {
@@ -85,6 +87,7 @@ class NotesController extends GetxController {
           notes[index].note = note.note;
           // Trigger a refresh of the list
           notes.refresh();
+          Get.snackbar('Success', 'Note updated successfully!');
         } else {
           await addNote(note);
         }
@@ -105,6 +108,7 @@ class NotesController extends GetxController {
             .doc(note.id)
             .delete();
         notes.remove(note);
+        Get.snackbar('Success', 'Note deleted successfully!');
       } catch (e) {
         Get.snackbar('Error', 'Failed to delete note: $e');
       }
